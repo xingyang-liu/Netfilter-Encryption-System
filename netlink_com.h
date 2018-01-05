@@ -10,9 +10,8 @@
 #include <linux/netlink.h>
 #include <linux/spinlock.h>
 
-// DEFINE_MUTEX(receive_sem);
 
-#define NETLINK_TEST 25/* general netlink */
+#define NETLINK_TEST 25/* customized netlink */
 
 struct packet_info
 {

@@ -45,6 +45,11 @@ extern struct sock *nl_sk;;
 #define RECEIVE 0x1
 #define SEND 0x0
 
+/**
+  * @brief  Display the package and send to User Space process
+  * @param  package data, start position, data length to display, Enc or Unenc, Recieved or Sent
+  * @retval null
+  */
 static void display_packet(char *memory, int start, int len, int is_enc, int is_recv){
 	u8 tmp[16];
 	//int tmp[4];
@@ -86,7 +91,6 @@ static void display_packet(char *memory, int start, int len, int is_enc, int is_
 
 		sendnlmsg(msg);
 		
-		//printk(KERN_INFO "[+] %08x_%08x_%08x_%08x\n", tmp[0], tmp[1], tmp[2], tmp[3]);
 		offset += 16;
 		len -= 16;
 		kfree(msg);
@@ -95,9 +99,9 @@ static void display_packet(char *memory, int start, int len, int is_enc, int is_
 }
 
 /**
-  * @brief  
-  * @param  
-  * @retval
+  * @brief  Calculate the padding length according to the source data
+  * @param  pre-padding data length
+  * @retval padding length
   */
 char padding_fill(int data_len) {
 	char tmp_len = 0;
@@ -109,9 +113,9 @@ char padding_fill(int data_len) {
 }
 
 /**
-  * @brief  
-  * @param  
-  * @retval 
+  * @brief  Calculate the padding length according to the data that has been padding
+  * @param  post-padding data length
+  * @retval padding length
   */
 char padding_check(char * data, int len)
 {
@@ -134,9 +138,9 @@ char padding_check(char * data, int len)
 }
 
 /**
-  * @brief  
+  * @brief  Decrypt the data package when recieving it
   * @param  
-  * @retval uint16_t, the length of '*data' pointer(in bit)
+  * @retval the length of '*data' pointer(in bit)
   */
 unsigned int nf_hookfn_in(void *priv,
 			       struct sk_buff *skb,
@@ -193,9 +197,9 @@ unsigned int nf_hookfn_in(void *priv,
 }
 
 /**
-  * @brief  
+  * @brief  Encrypt the data package when sending it
   * @param  
-  * @retval uint16_t, the length of '*data' pointer(in bit)
+  * @retval the length of '*data' pointer(in bit)
   */
 unsigned int nf_hookfn_out(void *priv,
 			       struct sk_buff *skb,

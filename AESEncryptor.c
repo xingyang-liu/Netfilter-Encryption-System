@@ -104,7 +104,7 @@ int aes_crypto_cipher(	char* data, __u16 data_len,
 	for (i = 0; i < data_len/16; i++)
 	{
 		/* We encrypt one block */
-		sg_init_one(&sk.sg, data + i*16, 16);//sg_init_table(&sgl, data_len/16);
+		sg_init_one(&sk.sg, data + i*16, 16);
 		skcipher_request_set_crypt(req, &sk.sg, &sk.sg, 16, ivdata);
 		init_completion(&sk.result.completion);
 

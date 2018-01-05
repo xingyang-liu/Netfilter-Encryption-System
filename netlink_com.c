@@ -8,6 +8,11 @@ struct sock *nl_sk = NULL;
 
 #define MAX_MSGSIZE 1024
 
+/**
+  * @brief  Send message to User Space process
+  * @param  message
+  * @retval null
+  */
 void sendnlmsg(char *message)
 {
     struct sk_buff *skb_1;
@@ -32,18 +37,23 @@ void sendnlmsg(char *message)
 
     printk(KERN_INFO "pid: %d\n", pid);
     memcpy(nlmsg_data(nlh),message,slen+1);
-    printk(KERN_INFO "pid: \n", pid);//,(char *)NLMSG_DATA(nlh));
+    printk(KERN_INFO "pid: \n", pid);
 
     netlink_unicast(nl_sk, skb_1, pid, MSG_DONTWAIT);
 }
 
+/**
+  * @brief  Recieve message from User Space process and respond to it
+  * @param  message
+  * @retval null
+  */
 void crypto_netlink_rcv(struct sk_buff *__skb)
 {
     struct sk_buff *skb;
     struct nlmsghdr *nlh;
     char str[100];
     struct completion cmpl;
-    // int i=10;
+
     skb = skb_get (__skb);
     char msg[20] = "I am from kernel!\0";
 
@@ -55,11 +65,14 @@ void crypto_netlink_rcv(struct sk_buff *__skb)
         printk("Message received:%s\n",str);
         pid = nlh->nlmsg_pid;
         flag = 1;
-        // kfree_skb(skb);
     }
 }
 
-// Initialize netlink
+/**
+  * @brief  Initialize netlink
+  * @param  null
+  * @retval success or fail
+  */
 int netlink_init(void)
 {
   	struct netlink_kernel_cfg cfg = {
@@ -76,7 +89,12 @@ int netlink_init(void)
     printk(KERN_INFO "NETLINK socket on.\n");
     return 0;
 }  
-  
+
+/**
+  * @brief  Unload netlink
+  * @param  null
+  * @retval success or fail
+  */
 void netlink_fini(void)
 {  
     if(nl_sk != NULL){  

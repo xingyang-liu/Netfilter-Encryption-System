@@ -84,7 +84,6 @@ int main(int argc, char* argv[])
     printf("waiting received!\n");
     FILE *log = fopen("log.txt", "a");
     while(1){
-        // printf("In while recvmsg\n");
         state = recvmsg(sock_fd, &msg, 0);
         if(state<0)
         {
